@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: service1
+          uri: lb://AuthService
+          predicates:
+            - Path=/auth/**
+        - id: service2
+          uri: lb://UserService
+          predicates:
+            - Path=/user/**
+
+jwt:
+  token:
+    secret: "alkdjfkkdlsjfklbjkehjkasjdfkolehjnlkfn;elknjf;kolejl;kfjkl;ejfkl;enjm;klfnlkdnnjkfbhjkvbhierb" # my secret key
