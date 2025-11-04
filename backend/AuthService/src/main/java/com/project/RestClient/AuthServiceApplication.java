@@ -9,11 +9,11 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class RestClientApplication {
+public class AuthServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestClientApplication.class, args);
-		System.out.println("restclient up and running");
+		SpringApplication.run(AuthServiceApplication.class, args);
+		System.out.println("AuthService up and running");
 	}
 
 	@Bean

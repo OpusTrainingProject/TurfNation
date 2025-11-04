@@ -1,5 +1,5 @@
 server:
-  port: 9010
+  port: 8888
 
 eureka:
   client:
@@ -16,6 +16,10 @@ spring:
           uri: lb://AuthService
           predicates:
             - Path=/auth/**
+        - id: service2
+          uri: lb://UserService
+          predicates:
+            - Path=/user/**
 
 jwt:
   token:

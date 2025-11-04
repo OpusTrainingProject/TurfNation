@@ -5,20 +5,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.project.RestClient.entity.User;
 import com.project.RestClient.entity.UserDto;
 import com.project.RestClient.jwt.JwtUtil;
 import com.project.RestClient.service.AuthService;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -28,9 +26,6 @@ public class Controller {
 	private JwtUtil jwtUtil;
 	
 	@Autowired AuthenticationManager authenticationManager;
-	
-	@Autowired
-	private RestTemplate restTemplate;
 	
 	@Autowired
 	private AuthService authService;
@@ -51,15 +46,20 @@ public class Controller {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> signUp(@RequestBody User user){
-		String msg = authService.signUp(user);
-		return ResponseEntity.ok(msg);
+	public ResponseEntity<String> signUp(@RequestBody User user){
+		ResponseEntity<String> msg = authService.signUp(user);
+		return msg;
 	}
 	
-	@PostMapping("/afterSignIn")
-	public ResponseEntity<?> afterSignIn(HttpServletRequest request){
-		Object id= request.getHeader("id");
-		Object role= request.getHeader("role");
-		return ResponseEntity.ok("id: "+id+" role: "+role);
+	@PutMapping("/updateProfile")
+	public ResponseEntity<String> updateUserProfile(@RequestBody User user){
+		authService.updateProfile(user);
+		return ResponseEntity.ok("profile updated successfully");
+	}
+	
+	@DeleteMapping("/deleteProfile/{id}")
+	public ResponseEntity<String> deleteUserProfile(@PathVariable Long id){
+		authService.deleteProfile(id);
+		return ResponseEntity.ok("Profile deleted successfully");
 	}
 }

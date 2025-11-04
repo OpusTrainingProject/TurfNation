@@ -8,25 +8,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.project.RestClient.dao.AuthDao;
 import com.project.RestClient.entity.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	@Autowired
-	private AuthDao authDao;
-	
-	@Autowired
 	private RestTemplate restTemplate;
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		System.out.println("Testing");
-		System.out.println("Email = " + email);
-		User dbUser = authDao.findByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException("No user exists with email: " + email));
-		return dbUser;
+		String url= "http://UserService/user/getByEmail/"+email;
+		ResponseEntity<User> dbUser = restTemplate.getForEntity(url, User.class);
+		return dbUser.getBody();
 	}
 	
 }

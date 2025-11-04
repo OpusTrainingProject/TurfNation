@@ -1,29 +1,45 @@
 package com.project.RestClient.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import com.project.RestClient.dao.AuthDao;
 import com.project.RestClient.entity.User;
 
-import jakarta.transaction.Transactional;
 
 @Service
-@Transactional
 public class AuthServiceImpl implements AuthService{
 	
 	@Autowired
-	private PasswordEncoder encoder;
+	private RestTemplate restTemplate;
 	@Autowired
-	private AuthDao authDao;
+	private PasswordEncoder encoder;
 	
 	@Override
-	public String signUp(User user) {
+	public ResponseEntity<String> signUp(User user) {
 		// TODO Auto-generated method stub
 		user.setPassword(encoder.encode(user.getPassword()));
-		authDao.save(user);
-		return "user registered";
+		String url="http://UserService/user/create";
+		ResponseEntity<String> success= restTemplate.postForEntity(url, user, String.class);
+		return success;
+	}
+
+	@Override
+	public void updateProfile(User user) {
+		// TODO Auto-generated method stub
+		user.setPassword(encoder.encode(user.getPassword()));
+		String url="http://UserService/user/update";
+		restTemplate.put(url, user);
+		
+	}
+
+	@Override
+	public void deleteProfile(Long id) {
+		// TODO Auto-generated method stub
+		String url="http://UserService/user/delete/"+id;
+		restTemplate.delete(url);
 	}
 
 }

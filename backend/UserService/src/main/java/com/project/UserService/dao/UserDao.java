@@ -1,14 +1,14 @@
-package com.project.RestClient.dao;
+package com.project.UserService.dao;
 
-import java.util.Optional;
+import java.util.Optional; 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.project.RestClient.entity.User;
+import com.project.UserService.entity.User;
 
 @Repository
-public interface AuthDao extends JpaRepository<User, Long>{
+public interface UserDao extends JpaRepository<User, Long>{
 	Optional<User>findByEmail(String email);
 
 }

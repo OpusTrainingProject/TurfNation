@@ -1,23 +1,34 @@
-package com.project.RestClient.entity;
+package com.project.UserService.entity;
 
-import java.time.LocalDateTime; 
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDateTime;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-public class User implements UserDetails{
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class User {
     
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
     private String firstname;
     private String lastname;
     private String email;
     private String phone;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    @CreatedDate
     private LocalDateTime createdOn;
+    @LastModifiedDate
 	private LocalDateTime updatedOn;
     
     public Long getId() {
@@ -90,18 +101,6 @@ public class User implements UserDetails{
 
 	public void setUpdatedOn(LocalDateTime updatedOn) {
 		this.updatedOn = updatedOn;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		List<GrantedAuthority> authorities= AuthorityUtils.createAuthorityList("ROLE_"+this.userRole.name());
-		return authorities;
-	}
-	
-	@Override
-	public String getUsername() {
-		return this.email;
 	}
 
 	
