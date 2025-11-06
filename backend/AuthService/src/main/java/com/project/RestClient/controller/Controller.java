@@ -45,9 +45,14 @@ public class Controller {
 		return ResponseEntity.ok(token);
 	}
 	
+	@PostMapping("/verify")
+	public void verifyEmail(@RequestBody String email){
+		authService.sendOtpReq(email);
+	}
+	
 	@PostMapping("/signup")
-	public ResponseEntity<String> signUp(@RequestBody User user){
-		ResponseEntity<String> msg = authService.signUp(user);
+	public ResponseEntity<String> signUp(@RequestBody User user, String otp){
+		ResponseEntity<String> msg = authService.signUp(user,otp);
 		return msg;
 	}
 	

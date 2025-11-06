@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import com.project.RestClient.entity.User;
 
 public interface AuthService {
-	ResponseEntity<String> signUp(User user);
+	ResponseEntity<String> signUp(User user, String otp);
+	void sendOtpReq(String email);
 	void updateProfile(User user);
 	void deleteProfile(Long id);
 }

@@ -57,7 +57,7 @@ public class JwtFilter implements GlobalFilter {
                     .collect(Collectors.joining(","));
 
             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                    .header("id", userId)
+                    .header("userId", userId)
                     .header("role", roles)
                     .build();
 

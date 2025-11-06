@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class User implements UserDetails{
     
-	private Long id;
+	private Long userId;
     private String firstname;
     private String lastname;
     private String email;
@@ -20,12 +20,12 @@ public class User implements UserDetails{
     private LocalDateTime createdOn;
 	private LocalDateTime updatedOn;
     
-    public Long getId() {
-		return id;
+    public Long getUserId() {
+		return userId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstname() {

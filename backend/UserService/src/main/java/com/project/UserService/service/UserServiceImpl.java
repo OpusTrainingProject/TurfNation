@@ -33,17 +33,17 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void deleteUser(Long id) {
-		if (!userDao.existsById(id)) {
-			throw new UserNotFoundException("No user found with id " + id);
+	public void deleteUser(Long userId) {
+		if (!userDao.existsById(userId)) {
+			throw new UserNotFoundException("No user found with userId " + userId);
 		}
-		userDao.deleteById(id);
+		userDao.deleteById(userId);
 	}
 
 	@Override
 	public void updateUser(User user) {
-		User existingUser = userDao.findById(user.getId())
-				.orElseThrow(() -> new UserNotFoundException("No user found with id " + user.getId()));
+		User existingUser = userDao.findById(user.getUserId())
+				.orElseThrow(() -> new UserNotFoundException("No user found with userId " + user.getUserId()));
 
 		existingUser.setFirstname(user.getFirstname());
 		existingUser.setLastname(user.getLastname());
@@ -64,9 +64,9 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public User getUserById(Long id) {
+	public User getUserById(Long userId) {
 		
-		return userDao.findById(id).orElseThrow(()-> new UserNotFoundException("No user found with id "+id));
+		return userDao.findById(userId).orElseThrow(()-> new UserNotFoundException("No user found with userId "+userId));
 	}
 	
 }

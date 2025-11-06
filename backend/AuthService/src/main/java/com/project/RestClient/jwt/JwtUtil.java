@@ -30,7 +30,7 @@ public class JwtUtil {
 	
 	public String createToken(Authentication auth) {
 		User user= (User) auth.getPrincipal();
-		String subject= "" +user.getId();
+		String subject= "" +user.getUserId();
 		String roles= user.getAuthorities().stream()
 						.map(authority->authority.getAuthority())
 						.collect(Collectors.joining(","));
