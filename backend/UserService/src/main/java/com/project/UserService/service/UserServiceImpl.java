@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService{
 		existingUser.setPassword(user.getPassword());
 		existingUser.setUserRole(user.getUserRole());
 		existingUser.setPhone(user.getPhone());
-
+		
 	}
 
 	@Override

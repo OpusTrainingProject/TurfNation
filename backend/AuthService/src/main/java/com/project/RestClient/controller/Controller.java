@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.RestClient.entity.User;
 import com.project.RestClient.entity.UserDto;
+import com.project.RestClient.entity.UserOtpDto;
 import com.project.RestClient.jwt.JwtUtil;
 import com.project.RestClient.service.AuthService;
 
@@ -45,14 +47,14 @@ public class Controller {
 		return ResponseEntity.ok(token);
 	}
 	
-	@PostMapping("/verify")
-	public void verifyEmail(@RequestBody String email){
+	@GetMapping("/verify/{email}")
+	public void verifyEmail(@PathVariable("email") String email){
 		authService.sendOtpReq(email);
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<String> signUp(@RequestBody User user, String otp){
-		ResponseEntity<String> msg = authService.signUp(user,otp);
+	public ResponseEntity<String> signUp(@RequestBody UserOtpDto dto){
+		ResponseEntity<String> msg = authService.signUp(dto);
 		return msg;
 	}
 	
