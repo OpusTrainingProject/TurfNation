@@ -26,7 +26,7 @@ public class JwtFilter implements GlobalFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private static final List<String> PUBLIC_PATHS = List.of("/auth/signin", "/auth/signup");
+    private static final List<String> PUBLIC_PATHS = List.of("/auth/signin", "/auth/signup", "/auth/verify");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -57,7 +57,7 @@ public class JwtFilter implements GlobalFilter {
                     .collect(Collectors.joining(","));
 
             ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
-                    .header("id", userId)
+                    .header("userId", userId)
                     .header("role", roles)
                     .build();
 

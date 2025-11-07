@@ -2,8 +2,8 @@ package com.project.UserService.entity;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +18,7 @@ public class User {
     
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long userId;
     private String firstname;
     private String lastname;
     private String email;
@@ -26,17 +26,19 @@ public class User {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    @CreatedDate
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdOn;
-    @LastModifiedDate
+    @UpdateTimestamp
 	private LocalDateTime updatedOn;
     
-    public Long getId() {
-		return id;
+    
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstname() {
