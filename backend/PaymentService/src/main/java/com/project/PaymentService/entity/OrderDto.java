@@ -6,7 +6,25 @@ public class OrderDto {
 	private BigDecimal amount;
 	private Long bookingId;
 	private Currency currency;
+	private Long userId;
+	private Long turfId;
 	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long getTurfId() {
+		return turfId;
+	}
+
+	public void setTurfId(Long turfId) {
+		this.turfId = turfId;
+	}
+
 	public Long getBookingId() {
 		return bookingId;
 	}

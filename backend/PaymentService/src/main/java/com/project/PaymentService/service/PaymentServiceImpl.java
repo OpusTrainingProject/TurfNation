@@ -51,8 +51,11 @@ public class PaymentServiceImpl implements PaymentService{
                 
         Payment payment = new Payment();
         payment.setBookingId(dto.getBookingId());
+        payment.setUserId(dto.getUserId());
+        payment.setTurfId(dto.getTurfId());
         payment.setAmount(dto.getAmount());
         payment.setPaymentStatus(Payment.PaymentStatus.PENDING);
+        payment.setPaymentMethod(Payment.PaymentMethod.CARD);
         payment.setRazorpayOrderId(order.get("id"));
         payment.setReceipt(order.get("receipt"));
         dao.save(payment);
