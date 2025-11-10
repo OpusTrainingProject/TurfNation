@@ -21,3 +21,18 @@ public class PaymentServiceApplication {
 		return new RestTemplate();
 	}
 }
+
+//#post     http://localhost:8080/payment/order
+//	{
+//"amount": 50,
+//"turfId": 101,
+//"bookingId": 2025,
+//"userId": 12,
+//"currency": "INR"
+//}
+//http://localhost:8080/payment/verify
+//{
+//"paymentId": "pay_RdVvrEUS6XJOvc",
+//"orderId": "order_RdVuq5UmTOmv8C",
+//"signature": "3d8f424742448e7fa60d890d1b674acde4551680c429f6f552f67d22dd80c367"
+//}
