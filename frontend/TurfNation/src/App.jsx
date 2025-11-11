@@ -1,3 +1,8 @@
+
+import './App.css'
+import SignIn from './pages/user/SignIn'
+import SignUp from './pages/user/SignUp'
+
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import AdminSidebar from "./admin/AdminSidebar";
@@ -39,6 +44,9 @@ const Login = () => (
 function App() {
   return (
     <>
+    <Routes>
+      
+    </Routes>
       <ToastContainer />
       <div className="flex">
         <AdminSidebar />
@@ -53,6 +61,8 @@ function App() {
             <Route path="/admin/payments" element={<AdminPayments />} />
             <Route path="/admin/bookings" element={<Bookings />} />
             <Route path="/login" element={<Login />} />
+            <Route path='/signup' element={<SignUp/>}/>
+            <Route path='/signin' element={<SignIn/>}/>
             <Route path="/" element={<AdminDashboard />} />
           </Routes>
         </div>
