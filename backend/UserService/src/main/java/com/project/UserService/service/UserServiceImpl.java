@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService{
 		User existingUser = userDao.findById(user.getUserId())
 				.orElseThrow(() -> new UserNotFoundException("No user found with userId " + user.getUserId()));
 
-		existingUser.setFirstname(user.getFirstname());
-		existingUser.setLastname(user.getLastname());
+		existingUser.setFirstName(user.getFirstName());
+		existingUser.setLastName(user.getLastName());
 		existingUser.setEmail(user.getEmail());
 		existingUser.setPassword(user.getPassword());
 		existingUser.setUserRole(user.getUserRole());
