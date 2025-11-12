@@ -44,9 +44,7 @@ const Login = () => (
 function App() {
   return (
     <>
-    <Routes>
-      
-    </Routes>
+
       <ToastContainer />
       <div className="flex">
         <AdminSidebar />

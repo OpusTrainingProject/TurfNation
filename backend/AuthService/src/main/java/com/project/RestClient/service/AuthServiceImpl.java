@@ -1,19 +1,22 @@
 package com.project.RestClient.service;
 
-import java.time.Duration;
+import java.time.Duration; 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.project.RestClient.entity.NotificationDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.RestClient.entity.OtpVerificationDto;
 import com.project.RestClient.entity.SignupDto;
 import com.project.RestClient.entity.User;
+import com.project.RestClient.entity.OtpVerificationDto.NotificationType;
 
 
 @Service
@@ -27,6 +30,9 @@ public class AuthServiceImpl implements AuthService{
 
 	@Autowired
 	private RedisTemplate<String, String> redisTemplate;
+	
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
 
 //	@Override
 //	public ResponseEntity<String> signUp(UserOtpDto dto) {
@@ -60,10 +66,18 @@ public class AuthServiceImpl implements AuthService{
 	        }
 	        String finalCaptcha=captcha.toString().trim();
 	        redisTemplate.opsForValue().set(email.trim(), finalCaptcha, 5, TimeUnit.MINUTES);//		redisTemplate.opsForValue().set("value", "email");
-			NotificationDto otpDto=new NotificationDto();
+			OtpVerificationDto otpDto=new OtpVerificationDto();
 			otpDto.setEmail(email);
 			otpDto.setOtp(captcha.toString());
+			otpDto.setNotificationType(NotificationType.OTP);
 			System.out.println(captcha.toString());
+			String messageJson="";
+			try {
+				messageJson = new ObjectMapper().writeValueAsString(otpDto);
+			}catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			kafkaTemplate.send("notification-topic", messageJson);
 	        // TODO: Send email logic here
 	        return "OTP sent successfully to " + email;
 	    }
