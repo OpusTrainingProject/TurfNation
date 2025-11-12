@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FiSearch, FiDollarSign } from 'react-icons/fi';
+import { FiSearch, FiDollarSign, FiTrendingUp } from 'react-icons/fi';
 
 const AdminPayments = () => {
   const [searchTurf, setSearchTurf] = useState('');
   const [appliedSearch, setAppliedSearch] = useState('');
 
-  // Hardcoded payment data - updated to match backend
+  // Payment data (same as before)
   const payments = [
     { paymentId: 1, turfId: 1, bookingId: 101, userId: 201, amount: 2500, razorpayPaymentId: 'pay_NXK123ABC789', paymentMethod: 'UPI', paymentStatus: 'SUCCESS' },
     { paymentId: 2, turfId: 1, bookingId: 102, userId: 202, amount: 3200, razorpayPaymentId: 'pay_MNO456DEF012', paymentMethod: 'CARD', paymentStatus: 'SUCCESS' },
@@ -24,10 +24,15 @@ const AdminPayments = () => {
   // Filter payments based on applied search
   const filteredPayments = useMemo(() => {
     if (!appliedSearch) return payments;
-    return payments.filter(payment => 
+    return payments.filter(payment =>
       payment.turfId.toString().includes(appliedSearch)
     );
   }, [appliedSearch, payments]);
+
+  // Calculate total revenue of filtered payments
+  const totalRevenue = useMemo(() => {
+    return filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
+  }, [filteredPayments]);
 
   const handleSearch = () => {
     setAppliedSearch(searchTurf);
@@ -84,19 +89,36 @@ const AdminPayments = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50 py-0 px-0">
       <style>{`
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-fadeIn { animation: fadeIn 0.6s ease-out; }
+        .animate-slideUp { animation: slideUp 0.5s ease-out; }
         .table-row-hover:hover { background-color: rgba(16, 185, 129, 0.05); transition: all 0.2s ease; }
       `}</style>
 
       <ToastContainer />
 
       <div className="w-full max-w-full mx-auto px-6 py-6">
-      
+        {/* Top section: Revenue Box and Search Bar side by side */}
+        <div className="mb-6 flex flex-col lg:flex-row gap-4 items-stretch animate-fadeIn">
+          {/* Revenue Box - Rectangle */}
+          <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-xl p-6 flex items-center gap-4 lg:w-80 animate-slideUp">
+            <div className="bg-white/20 p-4 rounded-lg">
+              <FiTrendingUp className="text-white w-8 h-8" />
+            </div>
+            <div className="flex-1">
+              <div className="text-white/90 text-sm font-semibold uppercase tracking-wide">Last Month Revenue</div>
+              <div className="text-white text-3xl font-extrabold mt-1 flex items-center gap-1">
+                ₹{totalRevenue.toLocaleString()}
+              </div>
+              <div className="text-white/80 text-xs mt-1">
+                {appliedSearch ? `Turf ID: ${appliedSearch}` : 'All Turfs'}
+              </div>
+            </div>
+          </div>
 
-        {/* Compact Search Bar with Button */}
-        <div className="mb-6 flex justify-center animate-fadeIn">
-          <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-200 inline-flex items-center gap-3">
-            <div className="relative">
+          {/* Search Bar */}
+          <div className="flex-1 bg-white rounded-xl shadow-lg p-4 border border-gray-200 flex items-center gap-3 animate-slideUp">
+            <div className="relative flex-1">
               <FiSearch className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
               <input
                 type="text"
@@ -104,12 +126,12 @@ const AdminPayments = () => {
                 value={searchTurf}
                 onChange={(e) => setSearchTurf(e.target.value)}
                 onKeyPress={handleKeyPress}
-                className="w-80 pl-12 pr-4 py-3 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all"
+                className="w-full pl-12 pr-4 py-3 text-base border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all"
               />
             </div>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+              className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 whitespace-nowrap"
             >
               <FiSearch className="w-5 h-5" />
               Search
@@ -121,7 +143,7 @@ const AdminPayments = () => {
                   setAppliedSearch('');
                   toast.info('Search cleared');
                 }}
-                className="px-4 py-3 text-gray-600 hover:text-gray-800 font-semibold hover:bg-gray-100 rounded-lg transition-colors"
+                className="px-4 py-3 text-gray-600 hover:text-gray-800 font-semibold hover:bg-gray-100 rounded-lg transition-colors whitespace-nowrap"
               >
                 Clear
               </button>
@@ -129,7 +151,7 @@ const AdminPayments = () => {
           </div>
         </div>
 
-        {/* Payment Table */}
+        {/* Payment Table - Full width below */}
         <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden animate-fadeIn">
           <div className="overflow-x-auto">
             <table className="w-full">

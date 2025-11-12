@@ -1,14 +1,15 @@
-
 import './App.css'
 import SignIn from './pages/user/SignIn'
 import SignUp from './pages/user/SignUp'
 
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import AdminSidebar from "./admin/AdminSidebar";
-import AdminHelpSupport from "./admin/AdminHelpSupport";
-import AdminPayments from "./admin/AdminPayments";
-import AdminDashboard from "./admin/AdminDashboard";
+import AdminSidebar from "./pages/admin/AdminSidebar";
+import AdminHelpSupport from "./pages/admin/AdminHelpSupport";
+import AdminPayments from "./pages/admin/AdminPayments";  // Updated import path
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import HelpSupport from './pages/user/HelpSupport';
+import ReviewSection from './pages/user/ReviewSection';
 
 // Dummy pages
 const AddTurf = () => (
@@ -44,13 +45,13 @@ const Login = () => (
 function App() {
   return (
     <>
-
       <ToastContainer />
       <div className="flex">
-        <AdminSidebar />
-        
+         <AdminSidebar /> 
+        <HelpSupport></HelpSupport>
+        <ReviewSection> </ReviewSection>
         {/* Fixed margin - no dynamic adjustment */}
-        <div className="ml-80 w-full min-h-screen bg-gray-100">
+        {/* <div className="ml-80 w-full min-h-screen bg-gray-100">
           <Routes>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/add-turf" element={<AddTurf />} />
@@ -62,8 +63,8 @@ function App() {
             <Route path='/signup' element={<SignUp/>}/>
             <Route path='/signin' element={<SignIn/>}/>
             <Route path="/" element={<AdminDashboard />} />
-          </Routes>
-        </div>
+          </Routes> */}
+        {/* </div> */}
       </div>
     </>
   );

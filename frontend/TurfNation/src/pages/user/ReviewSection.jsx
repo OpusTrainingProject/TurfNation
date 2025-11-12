@@ -1,8 +1,10 @@
+// src/pages/user/ReviewSection.jsx
 import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createReview } from '../../services/reviewService';
 
-const ReviewSection = () => {
+const ReviewSection = ({ bookingId }) => { // bookingId passed as prop
   const [stars, setStars] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
   const [description, setDescription] = useState('');
@@ -11,19 +13,55 @@ const ReviewSection = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     
+    // Validation: Check if rating is selected
     if (stars === 0) {
       toast.warning('⭐ Please select a rating!', { position: 'top-right' });
       return;
     }
 
+    // Validation: Check if bookingId is provided
+    if (!bookingId) {
+      toast.error('❌ Booking ID is missing. Cannot submit review.', { position: 'top-right' });
+      return;
+    }
+
     setPostingReview(true);
+    
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      toast.success('🎉 Review submitted successfully!', { position: 'top-right' });
+      // Prepare review data - backend will fetch turfId from booking service
+      const reviewDTO = {
+        bookingId: bookingId,
+        rating: stars,
+        description: description.trim()
+      };
+
+      // Call backend API to create review
+      const response = await createReview(reviewDTO);
+      
+      console.log('Review created successfully:', response);
+      toast.success('🎉 Review submitted successfully! Thank you for your feedback.', { 
+        position: 'top-right',
+        autoClose: 4000 
+      });
+      
+      // Reset form after successful submission
       setStars(0);
       setDescription('');
     } catch (error) {
-      toast.error('❌ Failed to submit. Please try again.', { position: 'top-right' });
+      console.error('Error submitting review:', error);
+      
+      // Handle specific error cases
+      let errorMessage = 'Failed to submit review. Please try again.';
+      
+      if (error.response?.status === 404) {
+        errorMessage = 'Booking not found. Please check your booking details.';
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response?.data?.message || 'Invalid review data.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      toast.error(`❌ ${errorMessage}`, { position: 'top-right' });
     } finally {
       setPostingReview(false);
     }
@@ -49,6 +87,7 @@ const ReviewSection = () => {
       <ToastContainer />
       <div className="max-w-2xl mx-auto px-4 py-6">
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+          {/* Header */}
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-5 py-3">
             <h3 className="text-xl font-bold text-white flex items-center">
               <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -56,6 +95,7 @@ const ReviewSection = () => {
               </svg>
               Add Your Review
             </h3>
+            <p className="text-green-100 text-sm mt-1">Booking ID: #{bookingId}</p>
           </div>
 
           <form onSubmit={handleReviewSubmit} className="p-6">
@@ -84,16 +124,17 @@ const ReviewSection = () => {
               <div className="relative">
                 <textarea
                   id="reviewDesc"
-                  placeholder="Share your experience..."
+                  placeholder="Share your experience with the turf and facilities..."
                   rows={4}
                   maxLength={250}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-100 transition-all resize-none"
+                  disabled={postingReview}
+                  className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-white focus:ring-2 focus:ring-green-100 transition-all resize-none disabled:opacity-50"
                 />
                 <span className="absolute bottom-2 right-3 text-xs text-gray-400">
-                  {description.length}/250
+                  {description.length}/100
                 </span>
               </div>
             </div>
@@ -132,7 +173,6 @@ const ReviewSection = () => {
                   <p className="mb-1">
                     <span className="font-semibold text-green-700">Your feedback matters!</span> Help us improve our services and assist other customers in making informed decisions.
                   </p>
-                 
                 </div>
               </div>
             </div>
