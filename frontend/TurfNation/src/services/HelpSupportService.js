@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Base URL - Replace with your actual API Gateway URL
-const API_BASE_URL = 'http://localhost:8080/helpsupport'; // TODO: Replace with actual API Gateway URL
+const API_BASE_URL = 'http://localhost:8084/helpsupport'; // TODO: Replace with actual API Gateway URL
 
 // Get JWT token from sessionStorage (for future use)
 const getAuthToken = () => {
