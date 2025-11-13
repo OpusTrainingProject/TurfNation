@@ -4,7 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createReview } from '../../services/reviewService';
 
-const ReviewSection = ({ bookingId }) => { // bookingId passed as prop
+// const ReviewSection = (//{ bookingId }//) => { // bookingId passed as prop
+const ReviewSection = () => { // bookingId passed as prop
   const [stars, setStars] = useState(0);
   const [hoveredStar, setHoveredStar] = useState(0);
   const [description, setDescription] = useState('');
@@ -19,18 +20,19 @@ const ReviewSection = ({ bookingId }) => { // bookingId passed as prop
       return;
     }
 
-    // Validation: Check if bookingId is provided
-    if (!bookingId) {
-      toast.error('❌ Booking ID is missing. Cannot submit review.', { position: 'top-right' });
-      return;
-    }
+    // // Validation: Check if bookingId is provided
+    // if (!bookingId) {
+    //   toast.error('❌ Booking ID is missing. Cannot submit review.', { position: 'top-right' });
+    //   return;
+    // }
 
     setPostingReview(true);
     
     try {
       // Prepare review data - backend will fetch turfId from booking service
       const reviewDTO = {
-        bookingId: bookingId,
+        // bookingId: bookingId,
+        bookingId: 1,
         rating: stars,
         description: description.trim()
       };
@@ -95,7 +97,8 @@ const ReviewSection = ({ bookingId }) => { // bookingId passed as prop
               </svg>
               Add Your Review
             </h3>
-            <p className="text-green-100 text-sm mt-1">Booking ID: #{bookingId}</p>
+            {/* <p className="text-green-100 text-sm mt-1">Booking ID: #{bookingId}</p> */}
+            <p className="text-green-100 text-sm mt-1">Booking ID: #1</p>
           </div>
 
           <form onSubmit={handleReviewSubmit} className="p-6">
