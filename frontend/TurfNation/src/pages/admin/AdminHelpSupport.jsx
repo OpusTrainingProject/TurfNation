@@ -38,7 +38,7 @@ const AdminHelpSupport = () => {
       await markAsResolved(id);
       
       // Remove from local state after successful resolve
-      setQueries(queries.filter(q => q.id !== id));
+      setQueries(queries.filter(q => q.helpsupportId !== id));
       
       toast.success('✅ Query marked as resolved!', {
         position: 'top-right',
@@ -139,9 +139,11 @@ const AdminHelpSupport = () => {
                         </td>
                         <td className="px-5 py-6">
                           <div className="flex items-center">
-                            <div className="w-11 h-11 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-base mr-3 flex-shrink-0">
-                              {query.name?.charAt(0).toUpperCase() || 'U'}
-                            </div>
+                            {/* <div className="w-11 h-11 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-base mr-3 flex-shrink-0">
+                             
+                            </div> */}
+                             {/* {query.name?.charAt(0).toUpperCase() || 'U'} */}
+                                    {/* {query.name} */}
                             <span className="text-base font-semibold text-gray-900 break-words">{query.name}</span>
                           </div>
                         </td>
@@ -163,12 +165,12 @@ const AdminHelpSupport = () => {
                         </td>
                         <td className="px-5 py-6">
                           <span className="text-base text-gray-600 font-medium whitespace-nowrap">
-                            {formatDate(query.createdAt || query.date)}
+                            {formatDate(query.createdOn || query.date)}
                           </span>
                         </td>
                         <td className="px-5 py-6 text-center">
                           <button
-                            onClick={() => handleResolve(query.id)}
+                            onClick={() => handleResolve(query.helpsupportId)}
                             disabled={resolvingId === query.id}
                             className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-base font-bold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                           >
