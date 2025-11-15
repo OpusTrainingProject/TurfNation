@@ -1,0 +1,54 @@
+# spring:
+#   application:
+#     name: NotificationService
+#   kafka:
+#     bootstrap-servers: localhost:9092
+
+# eureka:
+#   client:
+#     register-with-eureka: true
+#     fetch-registry: true
+#     service-url:
+#       defaultZone: http://localhost:8761/eureka
+
+# spring.mail:
+#   host: smtp.gmail.com
+#   port: 587
+#   username: tushardhamak657@gmail.com
+#   password: dfoblkjpfnrmsfro
+#   properties:
+#     mail.smtp.auth: true
+#     mail.smtp.starttls.enable: true
+
+spring:
+  application:
+    name: NotificationService
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: tushardhamak657@gmail.com
+    password: dfoblkjpfnrmsfro
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+
+ 
+
+ 
