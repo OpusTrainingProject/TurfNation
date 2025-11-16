@@ -4,15 +4,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.PaymentService.entity.OrderDto;
+import com.project.PaymentService.entity.PaymentDTO;
 import com.project.PaymentService.entity.PaymentVerifyReq;
+import com.project.PaymentService.entity.RevenueDTO;
+import com.project.PaymentService.entity.WeeklyPaymentDTO;
 import com.project.PaymentService.service.PaymentService;
 import com.razorpay.RazorpayException;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -44,4 +50,40 @@ public class PaymentController {
                     .body("Invalid payment signature");
         }
     }
+    
+    @GetMapping
+    public ResponseEntity<List<PaymentDTO>> getAllPayments() {
+        List<PaymentDTO> payments = paymentService.getAllPayments();
+        return ResponseEntity.ok(payments);
+    }
+
+    
+    @GetMapping("/turf/{turfId}")
+    public ResponseEntity<List<PaymentDTO>> getPaymentsByTurfId(@PathVariable Long turfId) {
+        List<PaymentDTO> payments = paymentService.getPaymentsByTurfId(turfId);
+        return ResponseEntity.ok(payments);
+    }
+
+    
+    @GetMapping("/revenue/total")
+    public ResponseEntity<RevenueDTO> getTotalRevenue() {
+        RevenueDTO revenue = paymentService.getTotalRevenue();
+        return ResponseEntity.ok(revenue);
+    }
+
+    
+    @GetMapping("/revenue/turf/{turfId}")
+    public ResponseEntity<RevenueDTO> getRevenueByTurfId(@PathVariable Long turfId) {
+        RevenueDTO revenue = paymentService.getRevenueByTurfId(turfId);
+        return ResponseEntity.ok(revenue);
+    }
+
+    
+    @GetMapping("/stats/weekly")
+    public ResponseEntity<List<WeeklyPaymentDTO>> getWeeklyPaymentStats() {
+        List<WeeklyPaymentDTO> weeklyStats = paymentService.getWeeklyPaymentStats();
+        return ResponseEntity.ok(weeklyStats);
+    }
+    
+    
 }

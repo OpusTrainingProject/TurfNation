@@ -1,6 +1,6 @@
     import './App.css'
     import { Routes, Route } from "react-router-dom";
-    // import { ToastContainer } from "react-toastify";
+    import { ToastContainer } from "react-toastify";
     import SignIn from './pages/user/SignIn'
     import SignUp from './pages/user/SignUp'
     import AdminSidebar from "./pages/admin/AdminSidebar";
@@ -45,7 +45,7 @@
       return (
         <>
     <Routes>
-      {/* Public routes */}
+      {/* Public routes  */}
       <Route path='/signup' element={<SignUp />} />
       <Route path='/signin' element={<SignIn />} />
       <Route path='/login' element={<Login />} />
@@ -54,7 +54,7 @@
       {/* User routes */}
       <Route path='/user' >
       <Route path='dashboard' element={<UserDashboard />} />
-      </Route>
+      </Route> 
 
       {/* Admin layout route */}
       <Route path='/admin' element={<AdminSidebar />}>

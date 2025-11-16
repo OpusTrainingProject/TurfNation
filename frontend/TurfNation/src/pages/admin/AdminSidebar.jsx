@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 import { 
   FiGrid, 
   FiPlus, 
@@ -109,6 +110,9 @@ const AdminSidebar = () => {
           <FiLogOut className="text-3xl text-red-400 flex-shrink-0" />
           {!isCollapsed && <span className="text-base font-semibold text-red-400">Logout</span>}
         </button>
+      </div>
+      <div className="flex-1">
+        <Outlet />
       </div>
     </div>
   );

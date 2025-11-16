@@ -1,8 +1,14 @@
 package com.project.PaymentService.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +22,10 @@ import com.project.PaymentService.entity.OrderDto;
 import com.project.PaymentService.entity.OrderDto.Currency;
 import com.project.PaymentService.entity.Payment;
 import com.project.PaymentService.entity.Payment.PaymentStatus;
+import com.project.PaymentService.entity.PaymentDTO;
 import com.project.PaymentService.entity.PaymentResponseDto;
+import com.project.PaymentService.entity.RevenueDTO;
+import com.project.PaymentService.entity.WeeklyPaymentDTO;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -147,5 +156,99 @@ public class PaymentServiceImpl implements PaymentService{
 //		}
 //		}
 //    }
+	
+	
 
+	
+	 private PaymentDTO convertToDTO(Payment payment) {
+	        PaymentDTO dto = new PaymentDTO();
+	        dto.setPaymentId(payment.getPaymentId());
+	        dto.setTurfId(payment.getTurfId());
+	        dto.setBookingId(payment.getBookingId());
+	        dto.setUserId(payment.getUserId());
+	        dto.setAmount(payment.getAmount());
+	        dto.setRazorpayPaymentId(payment.getRazorpayPaymentId());
+	        dto.setPaymentMethod(payment.getPaymentMethod().toString());
+	        dto.setPaymentStatus(payment.getPaymentStatus().toString());
+	        dto.setCreatedOn(payment.getCreatedOn());
+	        return dto;
+	    }
+	
+	@Override
+	public List<PaymentDTO> getAllPayments() {
+	    List<Payment> payments = dao.findAll();
+	    return payments.stream()
+	            .map(this::convertToDTO)
+	            .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<PaymentDTO> getPaymentsByTurfId(Long turfId) {
+	    List<Payment> payments = dao.findByTurfId(turfId);
+	    return payments.stream()
+	            .map(this::convertToDTO)
+	            .collect(Collectors.toList());
+	}
+
+	@Override
+	public RevenueDTO getTotalRevenue() {
+	    BigDecimal totalRevenue = dao.getTotalRevenue();
+	    Long totalPayments = dao.countByPaymentStatus(Payment.PaymentStatus.SUCCESS);
+	    
+	    return new RevenueDTO(
+	        totalRevenue != null ? totalRevenue : BigDecimal.ZERO,
+	        totalPayments,
+	        "Total revenue calculated successfully"
+	    );
+	}
+
+	@Override
+	public RevenueDTO getRevenueByTurfId(Long turfId) {
+	    BigDecimal revenue = dao.getTotalRevenueByTurfId(turfId);
+	    List<Payment> payments = dao.findByTurfId(turfId);
+	    
+	    long successfulPayments = payments.stream()
+	            .filter(p -> p.getPaymentStatus() == Payment.PaymentStatus.SUCCESS)
+	            .count();
+	    
+	    return new RevenueDTO(
+	        revenue != null ? revenue : BigDecimal.ZERO,
+	        successfulPayments,
+	        "Revenue for Turf ID " + turfId + " calculated successfully"
+	    );
+	}
+	
+	@Override
+	public List<WeeklyPaymentDTO> getWeeklyPaymentStats() {
+	    // Calculate date 8 weeks (56 days) ago from today
+	    LocalDateTime eightWeeksAgo = LocalDateTime.now().minusDays(56);
+	    
+	    // Get payments grouped by date from repository
+	    List<Object[]> results = dao.getWeeklyPaymentStats(eightWeeksAgo);
+	    
+	    // Convert results to DTO list
+	    List<WeeklyPaymentDTO> weeklyStats = new ArrayList<>();
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+	    
+	    // Loop through each result row
+	    for (Object[] result : results) {
+	        // result[0] = date (LocalDate from DATE function), result[1] = total amount (BigDecimal)
+	        java.sql.Date sqlDate = (java.sql.Date) result[0];
+	        LocalDate date = sqlDate.toLocalDate();
+	        BigDecimal amount = (BigDecimal) result[1];
+	        
+	        // Format date as DD/MM (e.g., "15/11")
+	        String formattedDate = date.format(formatter);
+	        
+	        // Create DTO and add to list
+	        WeeklyPaymentDTO dto = new WeeklyPaymentDTO();
+	        dto.setWeek(formattedDate);
+	        dto.setAmount(amount != null ? amount : BigDecimal.ZERO);
+	        weeklyStats.add(dto);
+	    }
+	    
+	    return weeklyStats;
+
+
+}
 }
