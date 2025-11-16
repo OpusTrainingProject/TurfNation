@@ -1,0 +1,147 @@
+Backend Flow - Fetching Reviews with User Names:
+text
+┌─────────────────────────────────────────────────────────┐
+│ USER CLICKS "VIEW REVIEWS" ON TURF CARD                │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ Frontend calls: GET /review/turf/1/with-users          │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ ReviewController receives request with turfId = 1      │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ Calls: reviewService.getReviewsByTurfIdWithUserNames() │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 1: Query Review Database                          │
+│ SELECT * FROM reviews WHERE turf_id = 1                │
+│ Returns: [Review1, Review2, Review3]                   │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 2: Loop through each review                       │
+│ For Review1: userId = 201                              │
+│ For Review2: userId = 202                              │
+│ For Review3: userId = 203                              │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 3: For each userId, call User Service             │
+│ RestTemplate makes HTTP call:                          │
+│ GET http://USER-SERVICE/users/201                      │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ User Service (Port 8083) receives request              │
+│ Queries: SELECT * FROM users WHERE user_id = 201       │
+│ Returns: { userId: 201, name: "John Doe" }            │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 4: Review Service receives user data              │
+│ Extracts user.getName() = "John Doe"                   │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 5: Create ReviewDTO                               │
+│ dto.setReviewId(1)                                      │
+│ dto.setRating(5)                                        │
+│ dto.setDescription("Great turf!")                      │
+│ dto.setUserName("John Doe") ← From User Service       │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 6: Repeat for all reviews                         │
+│ Build complete list with all user names                │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ STEP 7: Return final response                          │
+│ [                                                       │
+│   {                                                     │
+│     reviewId: 1,                                        │
+│     rating: 5,                                          │
+│     description: "Great turf!",                        │
+│     userName: "John Doe"                               │
+│   },                                                    │
+│   {                                                     │
+│     reviewId: 2,                                        │
+│     rating: 4,                                          │
+│     description: "Good experience",                    │
+│     userName: "Jane Smith"                             │
+│   }                                                     │
+│ ]                                                       │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────┐
+│ Frontend receives combined data                        │
+│ Can now display reviews with user names                │
+└─────────────────────────────────────────────────────────┘
+Frontend Display - How to Show This Data:
+1. For Homepage - Show Average Rating:
+javascript
+// Call API 1: Get average rating
+const response = await axios.get(`/api/review/turf/${turfId}/average-rating`);
+
+// Response: { turfId: 1, averageRating: 4.5, totalReviews: 24 }
+
+// Display as stars
+const rating = response.data.averageRating; // 4.5
+const totalReviews = response.data.totalReviews; // 24
+
+// Show: ⭐⭐⭐⭐⭐ 4.5 (24 reviews)
+2. For Reviews Page - Show All Reviews with Names:
+javascript
+// Call API 2: Get reviews with user names
+const response = await axios.get(`/api/review/turf/${turfId}/with-users`);
+
+// Response: Array of reviews with user names
+[
+  {
+    reviewId: 1,
+    rating: 5,
+    description: "Great turf!",
+    userName: "John Doe",
+    createdOn: "2025-11-15T10:30:00"
+  },
+  {
+    reviewId: 2,
+    rating: 4,
+    description: "Good experience",
+    userName: "Jane Smith",
+    createdOn: "2025-11-14T14:20:00"
+  }
+]
+
+// Display in cards:
+{reviews.map(review => (
+  <div key={review.reviewId} className="review-card">
+    <div className="stars">
+      {/* Show 5 stars based on rating */}
+      {"⭐".repeat(review.rating)}
+    </div>
+    <p className="user-name">{review.userName}</p>
+    <p className="description">{review.description}</p>
+    <p className="date">{formatDate(review.createdOn)}</p>
+  </div>
+))}
+Key Points:
+✅ API 1 (Simple): Just calculates average rating from database - one query
+
+✅ API 2 (Complex): Makes multiple HTTP calls:
+
+1 query to get all reviews
+
+N queries to User Service (one per review) to get user names
+
+✅ RestTemplate: Used for inter-service communication (Review Service → User Service)
+
+✅ @LoadBalanced: Enables Eureka service discovery - uses service name instead of hardcoded URL
+
+✅ Error Handling: If User Service is down, shows "Unknown User" instead of crashing
+
+✅ Performance Note: If there are 100 reviews, this makes 100 calls to User Service. In production, you might want to batch these or use caching!
