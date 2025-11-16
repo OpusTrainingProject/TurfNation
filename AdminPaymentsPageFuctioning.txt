@@ -1,0 +1,285 @@
+const AdminPayments = () => {
+  // STATE 1: Store all payments from backend
+  const [payments, setPayments] = useState([]);
+  
+  // STATE 2: Store search input (what user types)
+  const [searchTurf, setSearchTurf] = useState('');
+  
+  // STATE 3: Store applied search (what's actually searched)
+  const [appliedSearch, setAppliedSearch] = useState('');
+  
+  // STATE 4: Store revenue data
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  
+  // STATE 5: Loading state for API calls
+  const [loading, setLoading] = useState(true);
+
+
+We use useState to manage component state​
+
+Each state variable holds different data: payments list, search inputs, revenue, and loading status
+
+When state changes, React automatically re-renders the component
+
+----------------------------------------------------------------------------------------
+
+
+// This runs ONCE when component mounts (page loads)
+useEffect(() => {
+  fetchPaymentsData();
+}, []); // Empty array = run only once on mount
+
+const fetchPaymentsData = async () => {
+  try {
+    setLoading(true);
+    
+    // Call backend API to get all payments
+    const paymentsData = await getAllPayments();
+    setPayments(paymentsData); // Store in state
+    
+    // Call backend API to get total revenue
+    const revenueData = await getTotalRevenue();
+    setTotalRevenue(revenueData.totalRevenue); // Store revenue
+    
+    setLoading(false);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    toast.error('Failed to load payment data');
+    setLoading(false);
+  }
+};
+
+
+useEffect with empty dependency array [] runs once when component mounts​
+
+This is the React lifecycle - perfect place for initial data fetching​
+
+We call backend APIs using axios (in paymentService.js)
+
+Backend returns JSON data, we store it in state using setPayments()​
+
+Setting state triggers re-render, so data appears on screen
+
+
+
+---------------------------------------------------------------------------
+
+<input
+  type="text"
+  value={searchTurf}
+  onChange={(e) => setSearchTurf(e.target.value)} // Update state as user types
+/>
+
+User types "1" → setSearchTurf("1") → searchTurf state becomes "1"
+
+React re-renders with new value
+
+
+--------------------------------------------------------------------
+
+
+
+
+const handleSearch = async () => {
+  setAppliedSearch(searchTurf); // Mark this as "applied search"
+  
+  if (searchTurf) {
+    try {
+      setLoading(true);
+      
+      // Call backend with turf ID
+      const filteredData = await getPaymentsByTurfId(searchTurf);
+      setPayments(filteredData); // Update payments with filtered results
+      
+      // Get revenue for this specific turf
+      const revenueData = await getRevenueByTurfId(searchTurf);
+      setTotalRevenue(revenueData.totalRevenue);
+      
+      setLoading(false);
+      toast.info(`🔍 Showing results for Turf ID: ${searchTurf}`);
+    } catch (error) {
+      toast.error('Error fetching filtered data');
+      setLoading(false);
+    }
+  }
+};
+When user clicks "Search", we call backend API with turf ID
+
+Backend filters data in database using SQL query: SELECT * FROM payments WHERE turf_id = ?
+
+Backend returns only matching payments
+
+We update state with filtered results
+
+React re-renders table with new data
+
+---------------------------------------------------------------------
+
+{loading ? (
+  // Show loading spinner while fetching data
+  <div>Loading...</div>
+) : (
+  // Map through payments array and display each payment
+  payments.map((payment, index) => (
+    <tr key={payment.paymentId}>
+      <td>{index + 1}</td>
+      <td>{payment.turfId}</td>
+      <td>{payment.razorpayPaymentId}</td>
+      <td>₹{payment.amount.toLocaleString()}</td>
+      <td>{payment.paymentMethod}</td>
+      <td>{payment.paymentStatus}</td>
+      <td>{payment.bookingId}</td>
+      <td>{payment.userId}</td>
+    </tr>
+  ))
+)}
+
+We use .map() to iterate through payments array​
+
+For each payment object, we create a table row (<tr>)
+
+We access payment properties like payment.amount, payment.turfId etc.
+
+React converts this to actual HTML DOM elements
+
+When payments state changes, React automatically updates only changed rows (Virtual DOM)
+
+
+
+-------------------------------------------------------------------------
+
+// Revenue box shows dynamic data
+<div className="revenue-box">
+  <div>Last Month Revenue</div>
+  <div>₹{totalRevenue.toLocaleString()}</div>
+  <div>{appliedSearch ? `Turf ID: ${appliedSearch}` : 'All Turfs'}</div>
+</div>
+
+On page load: Shows total revenue (all turfs)
+
+After search: Shows revenue for specific turf
+
+Backend calculates: SUM(amount) WHERE payment_status = 'SUCCESS'
+
+
+--------------------------------------------------------------------------
+
+┌─────────────────────────────────────────────────────────────┐
+│ USER OPENS ADMIN PAYMENTS PAGE                              │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ useEffect() runs (component mounts) [web:69][web:72]       │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Call getAllPayments() API                                   │
+│ Call getTotalRevenue() API                                  │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Backend: PaymentRepository.findAll()                        │
+│ Backend: PaymentRepository.getTotalRevenue()                │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Database queries executed                                   │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Backend returns JSON: [payment1, payment2, ...]            │
+│ Backend returns JSON: { totalRevenue: 25000, ... }         │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Frontend: setPayments(data) [web:73][web:76]               │
+│ Frontend: setTotalRevenue(data.totalRevenue)               │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ React re-renders component [web:68]                        │
+│ Table displays all payments                                │
+│ Revenue box shows total revenue                            │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ USER SEARCHES FOR TURF ID "1"                               │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Call getPaymentsByTurfId(1) API                            │
+│ Call getRevenueByTurfId(1) API                             │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Backend: WHERE turf_id = 1 [web:74]                        │
+└─────────────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────────────┐
+│ Frontend updates state with filtered results [web:77]      │
+│ Table shows only Turf 1 payments                           │
+│ Revenue box shows only Turf 1 revenue                      │
+└─────────────────────────────────────────────────────────────┘
+
+
+
+--------------------------------------------------------------------
+
+
+React Concepts Used:
+✅ useState - Managing component state (payments, search, revenue)​
+
+✅ useEffect - Data fetching on component mount​
+
+✅ Conditional Rendering - Show loading vs. data vs. empty state
+
+✅ Event Handling - onChange for input, onClick for buttons
+
+✅ Array Mapping - .map() to render table rows from data array​
+
+Backend Integration:
+✅ Axios - HTTP client for API calls
+
+✅ REST APIs - GET requests to fetch data
+
+✅ JSON - Data format for communication
+
+✅ API Gateway - Single entry point routing to microservices
+
+✅ Service Layer Pattern - Separation of concerns (paymentService.js)
+
+Search Functionality:
+✅ Controlled Components - Input value controlled by React state​
+
+✅ Backend Filtering - Database queries for efficient filtering
+
+✅ Dynamic Updates - Revenue and table update based on search​
+
+7. Sample Answer for Trainer:
+"How did you implement the AdminPayments page?"
+
+"I created a React functional component that uses useState to manage the payments data, search inputs, and revenue. When the page loads, useEffect hook triggers API calls to the backend payment service through axios. The backend queries the MySQL database using JPA Repository and returns JSON data containing all payments and total revenue.
+
+For the search functionality, when a user enters a Turf ID and clicks search, the frontend calls the getPaymentsByTurfId API which filters data at the database level using a WHERE clause. The filtered results update the component state, and React automatically re-renders the table with only matching payments.
+
+The revenue box dynamically displays either total revenue for all turfs or filtered revenue for a specific turf, calculated by the backend using SQL SUM function on successful payments. All communication happens through our API Gateway which routes requests to the appropriate microservice.
+
+The component follows React best practices with controlled components, proper lifecycle management using hooks, and separation of concerns by keeping API logic in a separate service file."​
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
