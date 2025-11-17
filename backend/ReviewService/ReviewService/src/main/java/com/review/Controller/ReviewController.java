@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.review.DTO.ReviewDTO;
 import com.review.Entity.Review;
+import com.review.Entity.TurfAverageRatingDTO;
 import com.review.Service.ReviewService;
 
 @RestController
@@ -37,4 +38,18 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getReviewsByTurf(@PathVariable Long turfId) {
         return ResponseEntity.ok(reviewService.getReviewsByTurf(turfId));
     }
+    
+    @GetMapping("/turf/{turfId}/average-rating")
+    public ResponseEntity<TurfAverageRatingDTO> getAverageRating(@PathVariable Long turfId) {
+        TurfAverageRatingDTO averageRating = reviewService.getAverageRatingByTurfId(turfId);
+        return ResponseEntity.ok(averageRating);
+    }
+    
+   
+    @GetMapping("/turf/{turfId}/with-users")
+    public ResponseEntity<List<ReviewDTO>> getReviewsWithUserNames(@PathVariable Long turfId) {
+        List<ReviewDTO> reviews = reviewService.getReviewsByTurfIdWithUserNames(turfId);
+        return ResponseEntity.ok(reviews);
+    }
+    
 }
