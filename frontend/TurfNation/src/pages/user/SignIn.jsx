@@ -1,6 +1,6 @@
 
-
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInUser } from "../../services/authservice/SignIn";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,13 +82,23 @@ export default function SignIn() {
         autoClose: 2000
       });
       
-      sessionStorage.setItem("token", token.token || token);
-      console.log("Login success. Token:", token);
+      console.log("Login success. Token:", response.token);
+      console.log("User Role:", response.userRole);
       
+      // Redirect based on role after 800ms
       setTimeout(() => {
-        window.location.href = "/";
+        if (response.userRole === 'ADMIN') {
+          navigate('/admin/dashboard');
+        } else if (response.userRole === 'USER') {
+          navigate('/');
+        } else {
+          // Fallback for any other role
+          navigate('/');
+        }
       }, 800);
+      
     } catch (error) {
+      console.error('Login error:', error);
       toast.error("Invalid credentials 😞", { 
         position: "top-right",
         autoClose: 3000 

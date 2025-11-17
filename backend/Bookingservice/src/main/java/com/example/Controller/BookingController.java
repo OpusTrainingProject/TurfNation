@@ -19,6 +19,8 @@ import com.example.DTO.MyBookingResponse;
 import com.example.DTO.PaymentResponse;
 import com.example.Service.BookingService;
 import com.example.entities.Booking;
+import com.example.entities.BookingStatsDTO;
+import com.example.entities.WeeklyBookingDTO;
 
 @RestController
 @RequestMapping("/booking")
@@ -83,7 +85,19 @@ public class BookingController {
 	      return ResponseEntity.ok(response);
 	  }
 
+	  @GetMapping("/stats")
+	    public ResponseEntity<BookingStatsDTO> getBookingStats() {
+	        BookingStatsDTO stats = bookService.getBookingStats();
+	        return ResponseEntity.ok(stats);
+	    }
+	    
 	  
+	   
+	    @GetMapping("/stats/weekly")
+	    public ResponseEntity<List<WeeklyBookingDTO>> getWeeklyBookingStats() {
+	        List<WeeklyBookingDTO> weeklyStats = bookService.getWeeklyBookingStats();
+	        return ResponseEntity.ok(weeklyStats);
+	    }
 	  
 	  
 	  

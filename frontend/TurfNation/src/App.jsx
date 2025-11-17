@@ -93,20 +93,25 @@ const Login = () => (
       <Route path='booking' element={<BookingPage/>}/>
       </Route>
 
-      {/* Admin layout route */}
-      <Route path='/admin' element={<AdminSidebar />}>
-        <Route path='dashboard' element={<AdminDashboard />} />
-        <Route path='add-turf' element={<AddTurf />} />
-        <Route path='manage-turfs' element={<ManageTurfs />} />
-        <Route path='support' element={<AdminHelpSupport />} />
-        <Route path='payments' element={<AdminPayments />} />
-        <Route path='bookings' element={<Bookings />} />
-        <Route index element={<AdminDashboard />} /> 
-      </Route>
-    </Routes>
+        {/* User routes */}
+        <Route path='/user/dashboard' element={<UserDashboard />} />
 
-        </>
-      );
-    }
+        {/* Admin layout route with nested routes */}
+        <Route path='/admin' element={<AdminSidebar />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path='dashboard' element={<AdminDashboard />} />
+          <Route path='add-turf' element={<AddTurf />} />
+          <Route path='manage-turfs' element={<ManageTurfs />} />
+          <Route path='bookings' element={<Bookings />} />
+          <Route path='payments' element={<AdminPayments />} />
+          <Route path='support' element={<AdminHelpSupport />} />
+        </Route>
 
-    export default App;
+        {/* Catch-all route - redirects unknown paths to homepage */}
+        <Route path='*' element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;

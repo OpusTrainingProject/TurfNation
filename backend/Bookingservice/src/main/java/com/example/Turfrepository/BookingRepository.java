@@ -29,5 +29,11 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
 	  List<Booking> findByTurfId(Long turfId);
 	  
 	  
+	  @Query("SELECT b.bookingDate, COUNT(b) " + "FROM Booking b " +
+	           "WHERE b.bookingDate >= :startDate " +
+	           "GROUP BY b.bookingDate " +
+	           "ORDER BY b.bookingDate")
+	    List<Object[]> getWeeklyBookingStats(@Param("startDate") LocalDate startDate);
+	  
 	  
 }

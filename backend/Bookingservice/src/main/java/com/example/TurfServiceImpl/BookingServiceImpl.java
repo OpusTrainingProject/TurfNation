@@ -1,6 +1,7 @@
 package com.example.TurfServiceImpl;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,8 @@ import com.example.DTO.TurfResponse;
 import com.example.Service.BookingService;
 import com.example.Turfrepository.BookingRepository;
 import com.example.entities.Booking;
+import com.example.entities.BookingStatsDTO;
+import com.example.entities.WeeklyBookingDTO;
 import com.example.enums.Enums.PaymentStatus;
 
 @Service
@@ -194,7 +197,48 @@ public class BookingServiceImpl implements BookingService {
 
 
 	
-
+	 @Override
+	    public BookingStatsDTO getBookingStats() {
+	        // Count total bookings from database
+	        Long totalBookings = repo.count();
+	        
+	        // Create and return stats DTO
+	        BookingStatsDTO stats = new BookingStatsDTO();
+	        stats.setTotalBookings(totalBookings);
+	        
+	        return stats;
+	    }
+	    
+	    @Override
+	    public List<WeeklyBookingDTO> getWeeklyBookingStats() {
+	        // Calculate date 8 weeks (56 days) ago from today
+	        LocalDate eightWeeksAgo = LocalDate.now().minusDays(56);
+	        
+	        // Get bookings grouped by bookingDate from repository
+	        List<Object[]> results = repo.getWeeklyBookingStats(eightWeeksAgo);
+	        
+	        // Convert results to DTO list
+	        List<WeeklyBookingDTO> weeklyStats = new ArrayList<>();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+	        
+	        // Loop through each result row
+	        for (Object[] result : results) {
+	            // result[0] = bookingDate (LocalDate), result[1] = count (Long)
+	            LocalDate date = (LocalDate) result[0];
+	            Long count = (Long) result[1];
+	            
+	            // Format date as DD/MM (e.g., "15/11")
+	            String formattedDate = date.format(formatter);
+	            
+	            // Create DTO and add to list
+	            WeeklyBookingDTO dto = new WeeklyBookingDTO();
+	            dto.setWeek(formattedDate);
+	            dto.setBookings(count);
+	            weeklyStats.add(dto);
+	        }
+	        
+	        return weeklyStats;
+	    }
 	
 	
 	

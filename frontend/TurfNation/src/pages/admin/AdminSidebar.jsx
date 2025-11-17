@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 import { 
   FiGrid, 
   FiPlus, 
@@ -13,10 +14,12 @@ import {
 } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 
+
 const AdminSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
   const navigate = useNavigate();
+
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FiGrid, path: '/admin/dashboard' },
@@ -27,15 +30,27 @@ const AdminSidebar = () => {
     { id: 'support', label: 'Support Queries', icon: FiMessageSquare, path: '/admin/support' },
   ];
 
+
   const handleLogout = () => {
+    // Remove JWT token from sessionStorage
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userRole');
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('userEmail');
+    
+    // Clear any other user-related data if stored
+    sessionStorage.clear();
+    
     toast.success('👋 Logged out successfully!');
-    setTimeout(() => navigate('/login'), 2000);
+    setTimeout(() => navigate('/'), 1500); // Redirect to homepage
   };
+
 
   const handleNavigation = (item) => {
     setActiveItem(item.id);
     navigate(item.path);
   };
+
 
   return (
     <div
@@ -50,6 +65,7 @@ const AdminSidebar = () => {
           border-left: 4px solid #10b981;
         }
       `}</style>
+
 
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-700">
@@ -71,6 +87,7 @@ const AdminSidebar = () => {
           {isCollapsed ? <FiMenu className="text-2xl text-green-400" /> : <FiX className="text-2xl text-gray-400" />}
         </button>
       </div>
+
 
       {/* Navigation Menu */}
       <nav className="flex-1 py-6 px-3 overflow-y-auto">
@@ -100,6 +117,7 @@ const AdminSidebar = () => {
         </ul>
       </nav>
 
+
       {/* Logout */}
       <div className="p-4 border-t border-gray-700">
         <button
@@ -110,8 +128,12 @@ const AdminSidebar = () => {
           {!isCollapsed && <span className="text-base font-semibold text-red-400">Logout</span>}
         </button>
       </div>
+      <div className="flex-1">
+        <Outlet />
+      </div>
     </div>
   );
 };
+
 
 export default AdminSidebar;
