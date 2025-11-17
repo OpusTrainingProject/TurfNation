@@ -27,7 +27,7 @@ public class JwtFilter implements GlobalFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
-    private static final List<String> PUBLIC_PATHS = List.of("/auth/signin", "/auth/signup", "/auth/verify-otp","/auth/send-otp");
+    private static final List<String> PUBLIC_PATHS = List.of("/auth/signin", "/auth/signup", "/auth/verify-otp","/auth/send-otp","/user/create");
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

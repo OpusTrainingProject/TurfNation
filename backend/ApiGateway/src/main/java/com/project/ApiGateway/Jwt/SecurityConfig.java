@@ -22,7 +22,7 @@ public class SecurityConfig {
 		.csrf(csrf -> csrf.disable())
 		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 		.authorizeExchange(exchange -> exchange
-				.pathMatchers("/auth/signin", "/auth/signup", "/verifyuser", "/edit-profile",
+				.pathMatchers("/auth/signin", "/auth/signup","/auth/create", "/verifyuser", "/edit-profile",
 						"/auth/afterSignIn", "/css/**", "/js/**", "/assets/**")
 				.permitAll()
 				.anyExchange().permitAll() 

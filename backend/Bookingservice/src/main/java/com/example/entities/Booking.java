@@ -32,7 +32,7 @@ public class Booking {
     private BookingType bookingType;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 20)
     private PaymentMethod paymentMethod;
 
 

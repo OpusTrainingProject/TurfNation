@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,13 @@ public class UserController {
     	User user= userService.getUserById(id);
     	return ResponseEntity.ok(user);
     }
-
+    
+    @GetMapping("/getById")
+    public ResponseEntity<User> getByIdfromHeader(@RequestHeader("userId") Long id){
+    	User user= userService.getUserById(id);
+    	return ResponseEntity.ok(user);
+    }
+    
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();

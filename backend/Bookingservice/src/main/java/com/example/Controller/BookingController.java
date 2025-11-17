@@ -22,7 +22,6 @@ import com.example.entities.Booking;
 
 @RestController
 @RequestMapping("/booking")
-@CrossOrigin
 public class BookingController {
 
 	@Autowired

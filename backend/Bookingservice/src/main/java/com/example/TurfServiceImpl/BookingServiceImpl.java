@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.DTO.BookingCreatedEvent;
+import com.example.DTO.BookingCreatedEvent.NotificationType;
 import com.example.DTO.BookingRequestDTO;
 import com.example.DTO.MyBookingResponse;
 import com.example.DTO.PaymentRequest;
@@ -144,8 +145,10 @@ public class BookingServiceImpl implements BookingService {
 
 		        String email = userClient.getUserEmail(booking.getUserId());
 		        
-		        BookingCreatedEvent event = BookingCreatedEvent.fromBooking(booking,email);
-		        event.setUserEmail(email); //setting email after communicating with user service
+		        BookingCreatedEvent event = new BookingCreatedEvent();
+		        event.setNotificationType(NotificationType.BOOKING_CONFIRMATION);
+		        event.setBookingDetails(booking.getBookingId());
+		        event.setEmail(email); //setting email after communicating with user service
 
 		        bookingEventPublisher.publishBookingCreatedEvent(event);
 

@@ -9,19 +9,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class BookingEventPublisher {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ObjectMapper objectMapper;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public BookingEventPublisher(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public BookingEventPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapper;
     }
 
     public void publishBookingCreatedEvent(BookingCreatedEvent event) {
         try {
-            String message = objectMapper.writeValueAsString(event);
-            kafkaTemplate.send("booking-created-topic", message);
-            System.out.println("✅ Published booking event to Kafka: " + message);
+            
+            kafkaTemplate.send("notification-topic", event);
+            System.out.println("✅ Published booking event to Kafka: " + event);
         } catch (Exception e) {
             System.err.println("❌ Error while publishing booking event: " + e.getMessage());
         }

@@ -10,4 +10,5 @@ import com.project.PaymentService.entity.Payment;
 @Repository
 public interface PaymentDao extends JpaRepository<Payment, Long>{
 	public Optional<Payment> findByRazorpayOrderId(String orderId);
+	 Optional<Payment> findByBookingId(Long bookingId);
 }
