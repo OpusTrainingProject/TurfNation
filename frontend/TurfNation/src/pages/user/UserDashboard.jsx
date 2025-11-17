@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import UserNavbar from './UserNavbar';
-import { FaFutbol, FaCalendarAlt, FaClock, FaMapMarkerAlt, FaStar, FaArrowRight, FaTrophy, FaChartLine } from 'react-icons/fa';
+import { FaFutbol, FaCalendarAlt, FaClock, FaMapMarkerAlt, FaStar, FaArrowRight, FaTrophy, FaChartLine, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 
+
 const UserDashboard = () => {
   const [userName, setUserName] = useState('Chaitanya Sonawane');
   const [greeting, setGreeting] = useState('');
+
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -16,27 +18,56 @@ const UserDashboard = () => {
     else setGreeting('Good Evening');
   }, []);
 
+  // Function to render star rating
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={`full-${i}`} className="w-4 h-4 text-yellow-500" />);
+    }
+    
+    if (hasHalfStar) {
+      stars.push(<FaStarHalfAlt key="half" className="w-4 h-4 text-yellow-500" />);
+    }
+    
+    const emptyStars = 5 - Math.ceil(rating);
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<FaRegStar key={`empty-${i}`} className="w-4 h-4 text-yellow-500" />);
+    }
+    
+    return stars;
+  };
+
   // Sample data - Replace with actual API calls
   const upcomingBookings = [
     {
       id: 1,
+      turfId: 101, // Added turfId for reviews page
       turfName: 'Green Valley Sports Arena',
       date: '2025-11-16',
       time: '6:00 PM - 7:00 PM',
       location: 'Sector 21, Mumbai',
       sport: 'Football',
-      price: 1500
+      price: 1500,
+      rating: 4.5,
+      reviewCount: 128
     },
     {
       id: 2,
+      turfId: 102, // Added turfId for reviews page
       turfName: 'Champions Cricket Ground',
       date: '2025-11-18',
       time: '9:00 AM - 10:30 AM',
       location: 'Andheri West, Mumbai',
       sport: 'Cricket',
-      price: 2000
+      price: 2000,
+      rating: 4.8,
+      reviewCount: 95
     }
   ];
+
 
   const stats = [
     { icon: <FaCalendarAlt className="w-6 h-6" />, label: 'Total Bookings', value: '24', color: 'from-green-500 to-emerald-600' },
@@ -45,11 +76,13 @@ const UserDashboard = () => {
     { icon: <FaChartLine className="w-6 h-6" />, label: 'Hours Played', value: '36', color: 'from-purple-500 to-pink-600' },
   ];
 
+
   const recentActivity = [
     { id: 1, action: 'Booked', turf: 'Green Valley Sports Arena', time: '2 hours ago', icon: '⚽' },
     { id: 2, action: 'Reviewed', turf: 'Champions Cricket Ground', time: '1 day ago', icon: '⭐' },
     { id: 3, action: 'Completed', turf: 'Pro Basketball Court', time: '3 days ago', icon: '🏀' },
   ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50">
@@ -83,8 +116,10 @@ const UserDashboard = () => {
         .delay-300 { animation-delay: 0.3s; }
       `}</style>
 
+
       <ToastContainer />
       <UserNavbar />
+
 
       <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {/* Welcome Section */}
@@ -94,6 +129,7 @@ const UserDashboard = () => {
           </h1>
           <p className="text-xl text-gray-600">Ready to book your next game?</p>
         </div>
+
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -111,6 +147,7 @@ const UserDashboard = () => {
           ))}
         </div>
 
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Upcoming Bookings */}
           <div className="lg:col-span-2">
@@ -121,6 +158,7 @@ const UserDashboard = () => {
                   Upcoming Bookings
                 </h2>
               </div>
+
 
               <div className="p-6">
                 {upcomingBookings.length > 0 ? (
@@ -133,15 +171,29 @@ const UserDashboard = () => {
                         <div className="flex items-start justify-between mb-3">
                           <div>
                             <h3 className="text-xl font-bold text-gray-800 mb-1">{booking.turfName}</h3>
-                            <div className="flex items-center gap-2 text-gray-600 text-sm">
+                            <div className="flex items-center gap-2 text-gray-600 text-sm mb-2">
                               <FaMapMarkerAlt className="w-4 h-4 text-green-600" />
                               <span>{booking.location}</span>
+                            </div>
+                            
+                            {/* Rating Section */}
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1">
+                                {renderStars(booking.rating)}
+                              </div>
+                              <span className="text-sm font-bold text-gray-700">
+                                {booking.rating.toFixed(1)}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                ({booking.reviewCount} reviews)
+                              </span>
                             </div>
                           </div>
                           <div className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
                             {booking.sport}
                           </div>
                         </div>
+
 
                         <div className="grid grid-cols-2 gap-4 mb-4">
                           <div className="flex items-center gap-2 text-gray-700">
@@ -154,15 +206,28 @@ const UserDashboard = () => {
                           </div>
                         </div>
 
+
                         <div className="flex items-center justify-between pt-3 border-t-2 border-green-200">
                           <div className="text-2xl font-black text-green-600">₹{booking.price}</div>
-                          <Link
-                            to={`/booking/${booking.id}`}
-                            className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-md"
-                          >
-                            View Details
-                            <FaArrowRight className="w-4 h-4" />
-                          </Link>
+                          <div className="flex gap-2">
+                            {/* View Reviews Button - Updated route */}
+                            <Link
+                              to={`/reviews/${booking.turfId}`}
+                              className="flex items-center gap-2 bg-white border-2 border-yellow-500 text-yellow-600 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-50 transition-all duration-300 transform hover:scale-105 shadow-md"
+                            >
+                              <FaStar className="w-4 h-4" />
+                              Reviews
+                            </Link>
+                            
+                            {/* View Details Button */}
+                            <Link
+                              to={`/booking/${booking.id}`}
+                              className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-md"
+                            >
+                              View Details
+                              <FaArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -183,6 +248,7 @@ const UserDashboard = () => {
               </div>
             </div>
           </div>
+
 
           {/* Recent Activity & Quick Actions */}
           <div className="space-y-6">
@@ -211,6 +277,7 @@ const UserDashboard = () => {
               </div>
             </div>
 
+
             {/* Quick Actions */}
             <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-6 animate-slideInRight delay-100">
               <h2 className="text-xl font-black text-gray-800 mb-4">Quick Actions</h2>
@@ -226,6 +293,7 @@ const UserDashboard = () => {
                   <FaArrowRight className="w-4 h-4 text-green-600 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
 
+
                 <Link
                   to="/my-bookings"
                   className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 border-2 border-blue-200 hover:border-blue-400 group"
@@ -236,6 +304,7 @@ const UserDashboard = () => {
                   </div>
                   <FaArrowRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
+
 
                 <Link
                   to="/my-reviews"
@@ -255,5 +324,6 @@ const UserDashboard = () => {
     </div>
   );
 };
+
 
 export default UserDashboard;
