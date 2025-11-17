@@ -39,13 +39,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+<<<<<<< HEAD
+		<!--
+=======
 		
+>>>>>>> e2226885ba7d4d53de829d923a2709ebdcfa0710
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		
+<<<<<<< HEAD
+		!-->
+=======
 		
+>>>>>>> e2226885ba7d4d53de829d923a2709ebdcfa0710
 		
 	<dependency>
         <groupId>com.cloudinary</groupId>
