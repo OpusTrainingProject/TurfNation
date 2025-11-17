@@ -1,24 +1,21 @@
 package com.review.ServiceImpl;
 
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.review.DTO.BookingDTO;
 import com.review.DTO.ReviewDTO;
 import com.review.Dao.ReviewRepository;
-import com.review.Entity.*;
+import com.review.Entity.Review;
 import com.review.Entity.TurfAverageRatingDTO;
 import com.review.Entity.UserDTO;
 import com.review.Service.ReviewService;
+import com.review.Entity.UserDTO;
 
 @Service
 @Transactional

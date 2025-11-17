@@ -1,16 +1,13 @@
 package com.project.PaymentService.service;
 
-import java.util.List;
+import java.util.List ;
 import java.util.Map;
 
 
 import com.project.PaymentService.entity.OrderDto;
-<<<<<<< HEAD
 import com.project.PaymentService.entity.OrderResponseDTO;
-=======
 import com.project.PaymentService.entity.RevenueDTO;
 import com.project.PaymentService.entity.WeeklyPaymentDTO;
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
 import com.razorpay.RazorpayException;
 import com.project.PaymentService.entity.PaymentDTO;
 

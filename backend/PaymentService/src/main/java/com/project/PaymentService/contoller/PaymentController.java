@@ -1,8 +1,7 @@
 package com.project.PaymentService.contoller;
 
-<<<<<<< HEAD
-=======
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.RequestMapping ;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.PaymentService.entity.OrderDto;
@@ -12,7 +11,7 @@ import com.project.PaymentService.entity.RevenueDTO;
 import com.project.PaymentService.entity.WeeklyPaymentDTO;
 import com.project.PaymentService.service.PaymentService;
 import com.razorpay.RazorpayException;
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
+
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-<<<<<<< HEAD
-=======
+
 import org.springframework.web.bind.annotation.PathVariable;
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +65,6 @@ public class PaymentController {
         }
     }
     
-<<<<<<< HEAD
     @GetMapping("/getorder")
     public ResponseEntity<OrderResponseDTO> getOrder(@RequestParam Long bookingId) {
         try {
@@ -87,7 +83,6 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-=======
     @GetMapping
     public ResponseEntity<List<PaymentDTO>> getAllPayments() {
         List<PaymentDTO> payments = paymentService.getAllPayments();
@@ -122,6 +117,5 @@ public class PaymentController {
         return ResponseEntity.ok(weeklyStats);
     }
     
-    
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
+
 }

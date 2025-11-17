@@ -16,9 +16,9 @@ import com.project.PaymentService.entity.Payment.PaymentStatus;
 @Repository
 public interface PaymentDao extends JpaRepository<Payment, Long>{
 	public Optional<Payment> findByRazorpayOrderId(String orderId);
-<<<<<<< HEAD
+
 	 Optional<Payment> findByBookingId(Long bookingId);
-=======
+
 	
 	// In PaymentRepository.java
 	List<Payment> findByTurfId(Long turfId);
@@ -39,5 +39,4 @@ public interface PaymentDao extends JpaRepository<Payment, Long>{
 		       "ORDER BY DATE(p.createdOn)")
 		List<Object[]> getWeeklyPaymentStats(@Param("startDate") LocalDateTime startDate);
 
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
 }

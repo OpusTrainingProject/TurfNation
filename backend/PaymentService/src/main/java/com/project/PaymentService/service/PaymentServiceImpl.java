@@ -80,7 +80,6 @@ public class PaymentServiceImpl implements PaymentService{
 		return response;
 	}
 
-<<<<<<< HEAD
 	@Override
 	public boolean verifyPaymentSignature(String orderId, String paymentId, String signature) throws RazorpayException {
 		JSONObject options = new JSONObject();
@@ -145,8 +144,7 @@ public class PaymentServiceImpl implements PaymentService{
 	        
 	        return response;
 	    }
-}
-=======
+
 //	@Override
 //    public boolean verifyPaymentSignature(String orderId, String paymentId, String signature) throws RazorpayException {
 //        JSONObject options = new JSONObject();
@@ -278,4 +276,4 @@ public class PaymentServiceImpl implements PaymentService{
 
 }
 }
->>>>>>> 9b0177ffa4ffd86db588679f015e6af406b41cb4
+

@@ -3,10 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import SignIn from './pages/user/SignIn'
 import SignUp from './pages/user/SignUp'
-import AdminSidebar from "./admin/AdminSidebar";
-import AdminHelpSupport from "./admin/AdminHelpSupport";
-import AdminPayments from "./admin/AdminPayments";
-import AdminDashboard from "./admin/AdminDashboard";
+import AdminSidebar from "./pages/admin/AdminSidebar";
+import AdminHelpSupport from "./pages/admin/AdminHelpSupport";
+import AdminPayments from "./pages/admin/AdminPayments";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import HomePage from './pages/user/HomePage';
 import UserDashboard from './pages/user/UserDashboard';
 
