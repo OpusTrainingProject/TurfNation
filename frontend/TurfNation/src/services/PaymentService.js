@@ -60,5 +60,40 @@ export const paymentService = {
     }
   }
 };
+export const getAllPayments = async () => {
+  try {
+    const response = await axiosInstance.get('/payment/all');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+export const getPaymentsByTurfId = async (turfId) => {
+  try {
+    const response = await axiosInstance.get(`/payment/turf/${turfId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+export const getRevenueByTurfId = async (turfId) => {
+  try {
+    const response = await axiosInstance.get(`/payment/revenue/${turfId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+export const getTotalRevenue = async () => {
+  try {
+    const response = await axiosInstance.get('/payment/total-revenue');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 
 export default axiosInstance;

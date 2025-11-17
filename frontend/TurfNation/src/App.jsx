@@ -86,30 +86,56 @@
 // export default App;
 
 
-import './App.css' 
+// import './App.css' 
+// import { Routes, Route, Navigate } from "react-router-dom";
+// import 'react-toastify/dist/ReactToastify.css';
+
+// import './App.css'
+// import { ToastContainer } from "react-toastify";
+// import SignIn from './pages/user/SignIn'
+// import SignUp from './pages/user/SignUp'
+
+// import AdminSidebar from "./pages/admin/AdminSidebar";
+// import AdminHelpSupport from "./pages/admin/AdminHelpSupport";
+// import AdminPayments from "./pages/admin/AdminPayments";
+// import AdminDashboard from "./pages/admin/AdminDashboard";
+
+// import AdminPayments from './pages/admin/AdminPayments';
+// import AddTurf from "./pages/admin/AddTurf";
+// import AllTurf from "./pages/admin/AllTurf";
+// import AllBookings from "./pages/admin/AllBookings";
+
+// import HomePage from './pages/user/HomePage';
+// import UserDashboard from './pages/user/UserDashboard';
+
+import './App.css';
 import { Routes, Route, Navigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
-import './App.css'
-import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import SignIn from './pages/user/SignIn'
-import SignUp from './pages/user/SignUp'
 
+// User pages
+import SignIn from './pages/user/SignIn';
+import SignUp from './pages/user/SignUp';
+import UserDashboard from './pages/user/UserDashboard';
+
+// Admin pages
 import AdminSidebar from "./pages/admin/AdminSidebar";
 import AdminHelpSupport from "./pages/admin/AdminHelpSupport";
 import AdminPayments from "./pages/admin/AdminPayments";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-
-import AdminPayments from './pages/admin/AdminPayments';
 import AddTurf from "./pages/admin/AddTurf";
 import AllTurf from "./pages/admin/AllTurf";
 import AllBookings from "./pages/admin/AllBookings";
 
-import HomePage from './pages/user/HomePage';
-import UserDashboard from './pages/user/UserDashboard';
-
+// Other components (import these if you use them)
+import PublicDashboard from './pages/public/PublicDashboard';
+import HelpSupport from './pages/user/HelpSupport';
+import UserHomePage from './pages/user/UserHomePage';
+import ReviewSection from './pages/user/ReviewSection';
+import UserProfile from './pages/user/UserProfile';
+import BookingPage from './pages/user/BookingPage';
+import HomePage from './pages/public/HomePage';
+import HowItWorksPage from './pages/public/HowItWorks';
 
 
     function App() {
@@ -133,10 +159,6 @@ import UserDashboard from './pages/user/UserDashboard';
       <Route path='profile' element={<UserProfile/>}/>
       <Route path='booking' element={<BookingPage/>}/>
       </Route>
-
-        {/* User routes */}
-        <Route path='/user/dashboard' element={<UserDashboard />} />
-
 
         {/* Admin layout route with nested routes */}
         <Route path='/admin' element={<AdminSidebar />}>
