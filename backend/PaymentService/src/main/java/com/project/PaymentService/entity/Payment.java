@@ -29,47 +29,16 @@ public class Payment {
 	@Column(name = "user_id")
 	private Long userId;
 	
-	public Long getTurfId() {
-		return turfId;
-	}
-
-	public void setTurfId(Long turfId) {
-		this.turfId = turfId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 
 	@Column(nullable = false)
 	private BigDecimal amount;
 	
 	@Column(name = "receipt")
 	private String receipt;
-	
-	public String getReceipt() {
-		return receipt;
-	}
-
-	public void setReceipt(String receipt) {
-		this.receipt = receipt;
-	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_method")
 	private PaymentMethod paymentMethod;
-
-	public Long getBookingId() {
-		return bookingId;
-	}
-
-	public void setBookingId(Long bookingId) {
-		this.bookingId = bookingId;
-	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "payment_status", nullable = false)
@@ -87,7 +56,42 @@ public class Payment {
 
 	@Column(name = "booking_id")
 	private Long bookingId;
+
+	@Column(name = "tournament_id")
+	private Long tournamentId;
+
+	public String getReceipt() {
+		return receipt;
+	}
+
+	public void setReceipt(String receipt) {
+		this.receipt = receipt;
+	}
 	
+	public Long getBookingId() {
+		return bookingId;
+	}
+
+	public void setBookingId(Long bookingId) {
+		this.bookingId = bookingId;
+	}
+	
+	public Long getTurfId() {
+		return turfId;
+	}
+
+	public void setTurfId(Long turfId) {
+		this.turfId = turfId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
 	public Long getPaymentId() {
 		return paymentId;
 	}
@@ -159,10 +163,6 @@ public class Payment {
 	public void setTournamentId(Long tournamentId) {
 		this.tournamentId = tournamentId;
 	}
-
-	@Column(name = "tournament_id")
-	private Long tournamentId;
-
 
 
 	public enum PaymentMethod {

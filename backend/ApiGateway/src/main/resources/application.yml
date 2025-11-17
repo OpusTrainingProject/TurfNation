@@ -16,11 +16,37 @@ spring:
           uri: lb://AuthService
           predicates:
             - Path=/auth/**
+
         - id: service2
           uri: lb://UserService
           predicates:
             - Path=/user/**
 
+        - id: service3
+          uri: lb://BookingService
+          predicates:
+            - Path=/booking/**
+
+        - id: service4
+          uri: lb://ReviewService
+          predicates:
+            - Path=/review/**
+
+        - id: service5
+          uri: lb://HelpSupportService
+          predicates:
+            - Path=/helpsupport/**
+
+        - id: service6
+          uri: lb://TurfCrudService
+          predicates:
+            - Path=/turf/**
+
+        - id: service7
+          uri: lb://PaymentService
+          predicates:
+            - Path=/payment/**
+
 jwt:
   token:
-    secret: "alkdjfkkdlsjfklbjkehjkasjdfkolehjnlkfn;elknjf;kolejl;kfjkl;ejfkl;enjm;klfnlkdnnjkfbhjkvbhierb" # my secret key
+    secret: "alkdjfkkdlsjfklbjkehjkasjdfkolehjnlkfn;elknjf;kolejl;kfjkl;ejfkl;enjm;klfnlkdnnjkfbhjkvbhierb"

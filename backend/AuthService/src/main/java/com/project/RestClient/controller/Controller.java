@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.project.RestClient.entity.OtpVerificationDto;
 import com.project.RestClient.entity.SignupDto;
@@ -37,8 +38,11 @@ public class Controller {
 	@Autowired
 	private AuthService authService;
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	@PostMapping("/signin")
-	public ResponseEntity<Map<String, String>> signIn( @RequestBody UserDto dto){
+	public ResponseEntity<Map<String, Object>> signIn( @RequestBody UserDto dto){
 		System.out.println("SIGNIN API HIT");
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword());
@@ -49,8 +53,10 @@ public class Controller {
 		String token = jwtUtil.createToken(authenticated);
 		System.out.println(token);
 		
-		Map<String, String> response = new HashMap<>();
+		Map<String, Object> response = new HashMap<>();
 	    response.put("token", token);
+	    ResponseEntity<User> user=restTemplate.getForEntity("http://UserService/user/getByEmail/"+dto.getEmail(), User.class);
+	    response.put("user", user);
 	    return ResponseEntity.ok(response);
 	}
 	

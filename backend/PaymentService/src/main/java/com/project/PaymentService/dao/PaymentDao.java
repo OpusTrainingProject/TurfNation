@@ -16,6 +16,9 @@ import com.project.PaymentService.entity.Payment.PaymentStatus;
 @Repository
 public interface PaymentDao extends JpaRepository<Payment, Long>{
 	public Optional<Payment> findByRazorpayOrderId(String orderId);
+
+	 Optional<Payment> findByBookingId(Long bookingId);
+
 	
 	// In PaymentRepository.java
 	List<Payment> findByTurfId(Long turfId);

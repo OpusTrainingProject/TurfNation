@@ -1,92 +1,64 @@
-
 import axios from 'axios';
 
-// Base URL - Replace with your actual API Gateway URL
-const API_BASE_URL = 'http://localhost:8080/api/payments'; 
+const API_BASE_URL = 'http://localhost:8888';
 
-
-const getAuthToken = () => {
-  return sessionStorage.getItem('jwtToken');
-};
-
-// Helper to get auth headers
-const getAuthHeaders = () => {
-  const token = getAuthToken();
-  const headers = {
+// Create axios instance
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
     'Content-Type': 'application/json',
-  };
-  
- 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
+  },
+});
+
+// Add request interceptor to include token
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  
-  return { headers };
-};
+);
 
-/**
-
- */
-export const getAllPayments = async () => {
-  try {
-    const response = await axios.get(
-      API_BASE_URL,
-      getAuthHeaders()
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching all payments:', error.response?.data?.message || error.message);
-    throw error;
+// Add response interceptor for error handling
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      sessionStorage.clear();
+      window.location.href = '/signin';
+    }
+    return Promise.reject(error);
   }
-};
+);
 
-/**
- * Get payments by Turf ID (Admin only)
- 
- */
-export const getPaymentsByTurfId = async (turfId) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/turf/${turfId}`,
-      getAuthHeaders()
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching payments for turf ${turfId}:`, error.response?.data?.message || error.message);
-    throw error;
-  }
-};
+// Payment Service Functions
+export const paymentService = {
+  // Get order details for payment
+  getOrderDetails: async (bookingId) => {
+    try {
+      const response = await axiosInstance.get(`/payment/getorder`, {
+        params: { bookingId }
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
 
-/**
-
- * Returns: { totalRevenue: BigDecimal, totalPayments: Long, message: String }
- */
-export const getTotalRevenue = async () => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/revenue/total`,
-      getAuthHeaders()
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching total revenue:', error.response?.data?.message || error.message);
-    throw error;
+  // Verify payment after Razorpay callback
+  verifyPayment: async (paymentData) => {
+    try {
+      const response = await axiosInstance.post('/payment/verify', paymentData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
   }
 };
 
-/**
-
- * Returns: { totalRevenue: BigDecimal, totalPayments: Long, message: String }
- */
-export const getRevenueByTurfId = async (turfId) => {
-  try {
-    const response = await axios.get(
-      `${API_BASE_URL}/revenue/turf/${turfId}`,
-      getAuthHeaders()
-    );
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching revenue for turf ${turfId}:`, error.response?.data?.message || error.message);
-    throw error;
-  }
-};
+export default axiosInstance;

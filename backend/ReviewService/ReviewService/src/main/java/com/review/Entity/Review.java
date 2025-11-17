@@ -55,12 +55,12 @@ public class Review {
 		}
 
 
-		public Long getId() {
+		public Long getReviewId() {
 			return reviewId;
 		}
 
 
-		public void setId(Long id) {
+		public void setReviewId(Long id) {
 			this.reviewId = id;
 		}
 

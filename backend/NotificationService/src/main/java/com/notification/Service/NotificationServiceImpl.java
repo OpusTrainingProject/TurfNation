@@ -32,16 +32,14 @@ public class NotificationServiceImpl implements NotificationService {
 
             case BOOKING_CONFIRMATION:
                 BookingDTO booking = restTemplate.getForObject(
-                    "http://localhost:8081/booking/" + request.getBookingDetails(), BookingDTO.class);
+                    "http://BookingService/booking/" + request.getBookingDetails(), BookingDTO.class);
 
-                TurfDTO turf = restTemplate.getForObject(
-                    "http://localhost:8082/turf/" + booking.getTurfId(), TurfDTO.class);
+                
 
                 message.setSubject("Booking Confirmed");
-                message.setText("Your booking is confirmed! \n\n For Turf: " + turf.getName() +
-                                "\nLocation: " + turf.getLocation() +
+                message.setText("Your booking is confirmed! \n\n For Turf: " + 
                                 "\nDate: " + booking.getDate() +
-                                "\nTime: " + booking.getTime());
+                                "\nTime: " + booking.getTime()+ " for more details go to your account");
                 break;
 
         }

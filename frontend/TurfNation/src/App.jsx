@@ -1,3 +1,4 @@
+
 // import './App.css' 
 // import { Routes, Route, Navigate } from "react-router-dom";
 // import { ToastContainer } from "react-toastify";
@@ -89,40 +90,53 @@ import './App.css'
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+
+import './App.css'
+import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import SignIn from './pages/user/SignIn'
+import SignUp from './pages/user/SignUp'
+
 import AdminSidebar from "./pages/admin/AdminSidebar";
 import AdminHelpSupport from "./pages/admin/AdminHelpSupport";
+import AdminPayments from "./pages/admin/AdminPayments";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+
 import AdminPayments from './pages/admin/AdminPayments';
 import AddTurf from "./pages/admin/AddTurf";
 import AllTurf from "./pages/admin/AllTurf";
 import AllBookings from "./pages/admin/AllBookings";
 
+import HomePage from './pages/user/HomePage';
+import UserDashboard from './pages/user/UserDashboard';
 
-const Bookings = () => (
-  <div className="p-8">
-    <h1 className="text-4xl font-bold text-gray-900">All Bookings</h1>
-    <p className="text-gray-600 mt-2">View all turf bookings</p>
-  </div>
-);
 
-function App() {
-  return (
-    <>
-      <ToastContainer 
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
 
-      <Routes>
-        {/* Redirect root to admin dashboard */}
-        <Route path='/' element={<Navigate to="/admin/dashboard" replace />} />
+    function App() {
+      return (
+        <>
+    <Routes>
+      {/* Public routes */}
+      <Route path='/signup' element={<SignUp />} />
+      <Route path='/signin' element={<SignIn />} />
+      <Route path='/' element={<HomePage />} />
+      <Route path='/dashboard' element={<PublicDashboard />} />
+      <Route path='/guide' element={<HowItWorksPage/>}/>
+      <Route path='/help' element={<HelpSupport/>}/>
+
+
+      {/* User routes */}
+      <Route path='/user' >
+      <Route path='dashboard' element={<UserDashboard />} />
+      <Route path='home' element={<UserHomePage/>}/>
+      <Route path='review' element={<ReviewSection/>}/>
+      <Route path='profile' element={<UserProfile/>}/>
+      <Route path='booking' element={<BookingPage/>}/>
+      </Route>
+
+        {/* User routes */}
+        <Route path='/user/dashboard' element={<UserDashboard />} />
+
 
         {/* Admin layout route with nested routes */}
         <Route path='/admin' element={<AdminSidebar />}>
