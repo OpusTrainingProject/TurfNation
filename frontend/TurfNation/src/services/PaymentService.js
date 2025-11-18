@@ -58,7 +58,53 @@ export const paymentService = {
     } catch (error) {
       throw error.response?.data || error.message;
     }
+  },
+
+  // Get all payments (Admin)
+  getAllPayments: async () => {
+    try {
+      const response = await axiosInstance.get('/payment/getAllPayments');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Get payments by Turf ID (Admin)
+  getPaymentsByTurfId: async (turfId) => {
+    try {
+      const response = await axiosInstance.get(`/payment/getPaymentsByTurfId/${turfId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Get total revenue (Admin)
+  getTotalRevenue: async () => {
+    try {
+      const response = await axiosInstance.get('/payment/getTotalRevenue');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Get revenue by Turf ID (Admin)
+  getRevenueByTurfId: async (turfId) => {
+    try {
+      const response = await axiosInstance.get(`/payment/getRevenueByTurfId/${turfId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
   }
 };
 
 export default axiosInstance;
+
+// Export individual functions for direct import
+export const getAllPayments = paymentService.getAllPayments;
+export const getPaymentsByTurfId = paymentService.getPaymentsByTurfId;
+export const getTotalRevenue = paymentService.getTotalRevenue;
+export const getRevenueByTurfId = paymentService.getRevenueByTurfId;

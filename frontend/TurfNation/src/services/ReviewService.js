@@ -1,10 +1,10 @@
-// src/services/reviewService.js
+
 import axios from 'axios';
 
-// Base URL - Replace with your actual API Gateway URL
-const API_BASE_URL = 'http://localhost:8082/review'; // TODO: Replace with actual API Gateway URL
 
-// Get JWT token from sessionStorage (for future use)
+const API_BASE_URL = 'http://localhost:8082/review'; 
+
+
 const getAuthToken = () => {
   return sessionStorage.getItem('jwtToken');
 };
@@ -14,10 +14,10 @@ const getAuthHeaders = () => {
   const token = getAuthToken();
   const headers = {
     'Content-Type': 'application/json',
-    'user-id': '1', // TODO: Remove this hardcoded user-id when JWT is fully implemented
+    'user-id': '1', 
   };
   
-  // Add Bearer token if available (for future use)
+  
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -25,14 +25,6 @@ const getAuthHeaders = () => {
   return { headers };
 };
 
-/**
- * Create a new review
- * @param {Object} reviewDTO - The review data
- * @param {number} reviewDTO.bookingId - Booking ID
- * @param {number} reviewDTO.rating - Rating (1-5)
- * @param {string} reviewDTO.description - Review description
- * @returns {Promise} - Returns the created review
- */
 export const createReview = async (reviewDTO) => {
   try {
     const response = await axios.post(
@@ -47,11 +39,6 @@ export const createReview = async (reviewDTO) => {
   }
 };
 
-/**
- * Get all reviews for a specific turf
- * @param {number} turfId - The ID of the turf
- * @returns {Promise} - Returns list of reviews for the turf
- */
 export const getReviewsByTurf = async (turfId) => {
   try {
     const response = await axios.get(
