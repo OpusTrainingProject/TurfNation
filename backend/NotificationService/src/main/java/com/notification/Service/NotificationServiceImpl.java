@@ -32,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             case BOOKING_CONFIRMATION:
                 BookingDTO booking = restTemplate.getForObject(
-                    "http://BookingService/booking/" + request.getBookingDetails(), BookingDTO.class);
+                    "http://BookingService/booking/" + request.getBookingId(), BookingDTO.class);
 
                 
 
